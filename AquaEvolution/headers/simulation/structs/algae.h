@@ -1,9 +1,51 @@
 #ifndef ALGAE_CUH
 #define ALGAE_CUH
 
-#include "cuda/error.cuh"
-#include <cstdint>
 #include <simulation/structs/allocator.h>
+#include <cstdint>
+
+#ifdef THRUST_IMPL
+
+#include <thrust/device_vector.h>
+#include <thrust/host_vector.h>
+
+struct Algae {
+	struct Host {
+		thrust::host_vector<uint64_t> count;
+		thrust::host_vector<float2> positions;
+		thrust::host_vector<float2> directionVecs;
+		thrust::host_vector<bool> alives;
+		thrust::host_vector<float> currentEnergy;
+	} host;
+	struct Device {
+		thrust::device_vector<uint64_t> count;
+		thrust::device_vector<float2> positions;
+		thrust::device_vector<float2> directionVecs;
+		thrust::device_vector<bool> alives;
+		thrust::device_vector<float> currentEnergy;
+	} device;
+	const uint64_t capacity;
+
+	Algae(uint64_t capacity) : capacity(capacity) {
+		reserve(host, capacity);
+		host.count.push_back(0);
+		reserve(device, capacity);
+		device.count = host.count;
+	}
+
+private:
+	template <class T>
+	void reserve(T& t, uint64_t capacity)
+	{
+		t.count.reserve(1);
+		t.positions.reserve(capacity);
+		t.directionVecs.reserve(capacity);
+		t.alives.reserve(capacity);
+		t.currentEnergy.reserve(capacity);
+	}
+};
+#else
+#include "cuda/error.cuh"
 
 enum class AlgaeDecision {
 	NONE, MOVE, EAT,
@@ -43,5 +85,6 @@ struct Algae {
 private:
 	Algae(uint64_t capacity) : capacity(capacity) {}
 };
+#endif
 
 #endif // !ALGAE_CUH

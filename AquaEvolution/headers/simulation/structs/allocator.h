@@ -1,6 +1,11 @@
 #ifndef ALLOCATOR_CUH
 #define ALLOCATOR_CUH
 
+#define THRUST_IMPL
+
+#ifdef THRUST_IMPL
+
+#else
 #include <memory>
 #include "cuda/error.cuh"
 #include <cuda_runtime.h>
@@ -27,5 +32,6 @@ public:
 		checkCudaErrors(cudaFree(ptr));
 	}
 };
+#endif
 
 #endif // !ALLOCATOR_CUH
