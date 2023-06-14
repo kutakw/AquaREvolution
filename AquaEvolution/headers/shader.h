@@ -1,7 +1,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include <simulation/structs/aquarium.h>
+#include <simulation/structs/aquarium.cuh>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>

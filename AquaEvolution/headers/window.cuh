@@ -4,7 +4,7 @@
 #include <shader.h>
 #include <cuda/helper_math.cuh>
 #include <GLFW/glfw3.h>
-#include <simulation/structs/aquarium.h>
+#include <simulation/structs/aquarium.cuh>
 
 class Window {
 public:

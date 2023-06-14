@@ -1,9 +1,9 @@
 #ifndef FISH_CUH
 #define FISH_CUH
 
-#include <simulation/structs/allocator.h>
+#include <simulation/structs/allocator.cuh>
 
-enum class FishDecision {
+enum class FishDecisionEnum {
 	NONE, MOVE, EAT,
 };
 
@@ -13,39 +13,51 @@ enum class FishDecision {
 #include <thrust/host_vector.h>
 
 struct Fish {
+
+	using Entity = entity<float2, float2, bool, float, FishDecisionEnum, uint64_t>;
+	using EntityIter = entityIter<float2, float2, bool, float, FishDecisionEnum, uint64_t>;
+
 	struct Host {
-		thrust::host_vector<uint64_t> count;
 		thrust::host_vector<float2> positions;
 		thrust::host_vector<float2> directionVecs;
 		thrust::host_vector<bool> alives;
 		thrust::host_vector<float> currentEnergy;
-		thrust::host_vector<FishDecision> nextDecisions;
+		thrust::host_vector<FishDecisionEnum> nextDecisions;
 		thrust::host_vector<uint64_t> eatenAlgaeId;
+
 	} host;
 	struct Device {
-		thrust::device_vector<uint64_t> count;
 		thrust::device_vector<float2> positions;
 		thrust::device_vector<float2> directionVecs;
 		thrust::device_vector<bool> alives;
 		thrust::device_vector<float> currentEnergy;
-		thrust::device_vector<FishDecision> nextDecisions;
+		thrust::device_vector<FishDecisionEnum> nextDecisions;
 		thrust::device_vector<uint64_t> eatenAlgaeId;
+
+		thrust::tuple<thrust::zip_iterator<EntityIter>, thrust::zip_iterator<EntityIter>> iter();
 	} device;
 	const uint64_t capacity;
 
 
 	Fish(uint64_t capacity) : capacity(capacity) {
 		reserve(host, capacity);
-		host.count.push_back(0);
 		reserve(device, capacity);
-		device.count = host.count;
 	}
 
-private:
+	template <typename S, typename D>
+	void update(D& dest, S& src) {
+		dest.positions = src.positions;
+		dest.directionVecs = src.directionVecs;
+		dest.alives = src.alives;
+		dest.currentEnergy = src.currentEnergy;
+		dest.nextDecisions = src.nextDecisions;
+		dest.eatenAlgaeId = src.eatenAlgaeId;
+	}
+
+public:
 	template <class T>
 	void reserve(T& t, uint64_t capacity)
 	{
-		t.count.reserve(1);
 		t.positions.reserve(capacity);
 		t.directionVecs.reserve(capacity);
 		t.alives.reserve(capacity);
@@ -54,6 +66,16 @@ private:
 		t.eatenAlgaeId.reserve(capacity);
 	}
 
+	template <class T>
+	void resize(T& t, uint64_t size)
+	{
+		t.positions.resize(size);
+		t.directionVecs.resize(size);
+		t.alives.resize(size);
+		t.currentEnergy.resize(size);
+		t.nextDecisions.resize(size);
+		t.eatenAlgaeId.resize(size);
+	}
 };
 #else
 #include "cuda/helper_math.cuh"
@@ -68,7 +90,7 @@ struct Fish {
 	float2* directionVecs{ nullptr };
 	bool* alives{ nullptr };
 	float* currentEnergy{ nullptr };
-	FishDecision* nextDecisions{ nullptr };
+	FishDecisionEnum* nextDecisions{ nullptr };
 	uint64_t* eatenAlgaeId{ nullptr };
 
 	static Fish make(uint64_t capacity){
