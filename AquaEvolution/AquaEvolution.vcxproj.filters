@@ -25,6 +25,9 @@
     <ClInclude Include="headers\simulation\structs\algae.cuh" />
     <ClInclude Include="headers\simulation\structs\fish.cuh" />
     <ClInclude Include="headers\simulation\structs\allocator.cuh" />
+    <ClInclude Include="headers\simulation\structs\generators.cuh" />
+    <ClInclude Include="headers\simulation\structs\algae_functor.cuh" />
+    <ClInclude Include="headers\simulation\structs\fish_functor.cuh" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c" />

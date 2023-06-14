@@ -15,32 +15,14 @@
 //#include <thrust/async/transform.h>
 //#include <thrust/async/sort.h>
 //
-//struct Float2Generator {
-//	
-//	float a, b;
-//
-//	__host__ __device__
-//		Float2Generator(float _a = 0.f, float _b = 1.f) : a(_a), b(_b) {};
-//
-//	__host__ __device__
-//		float2 operator()(const unsigned int n) const
-//	{
-//		thrust::default_random_engine rng;
-//		thrust::uniform_real_distribution<float> dist(a, b);
-//		rng.discard(n);
-//
-//		float2 res = normalize(float2{ dist(rng), dist(rng) });
-//		return res;
-//	}
-//};
 
 struct Aquarium {
 	static constexpr uint64_t FISH_MAX_COUNT = 10000;
 	static constexpr uint64_t ALGAE_MAX_COUNT = 50000;
 	static constexpr float WIDTH = 100.f;
 	static constexpr float HEIGHT = 100.f;
-	static constexpr uint64_t FISH_START = 1;
-	static constexpr uint64_t ALGAE_START = 1;
+	static constexpr uint64_t FISH_START = 100;
+	static constexpr uint64_t ALGAE_START = 1000;
 
 	Fish fish;
 	Algae algae;
@@ -52,6 +34,10 @@ struct Aquarium {
 
 	void generateLife();
 	void simulateGeneration();
+private:
+	void decision();
+	void move();
+		
 };
 
 #else
