@@ -28,7 +28,7 @@ struct GenerateVector {
 		thrust::uniform_real_distribution<float> dist(0.0f, 1.0f);
 		rng.discard(n);
 
-		float2 res = normalize(make_float2( dist(rng), dist(rng) ));
+		float2 res = normalize(make_float2( dist(rng) * 2.0f - 1.0f, dist(rng) * 2.0f - 1.0f ));
 		return res;
 	}
 };

@@ -18,7 +18,7 @@ struct GenerateAlgaeFunctor {
 		float2 pos = make_float2(dist(rng) * Aquarium::WIDTH, dist(rng) * Aquarium::HEIGHT);
 		float2 vec = normalize(make_float2(dist(rng), dist(rng)));
 		bool alive = true;
-		float currentEnergy = 25.0f;
+		float currentEnergy = Algae::INIT_ENERGY;
 		return thrust::make_tuple(pos, vec, alive, currentEnergy);
 	}
 };
@@ -47,7 +47,7 @@ struct AlgaeDecisionFunctor {
 		auto pos = e.get<0>();
 		auto vec = e.get<1>();
 
-		float2 new_pos = pos + vec * 1e-4f;
+		float2 new_pos = pos + vec * Algae::VELOCITY;
 		if (new_pos.x < 0.0f || new_pos.x >= Aquarium::WIDTH)
 			vec.x *= -1.0f;
 		if (new_pos.y < 0.0f || new_pos.y >= Aquarium::HEIGHT)
@@ -88,13 +88,13 @@ struct AlgaeMoveFunctor {
 		auto id = tup.get<1>();
 		auto p = pos[id];
 		auto v = vec[id];
-		float2 new_pos = p + v * 1e-4f;
+		float2 new_pos = p + v * Algae::VELOCITY;
 		pos[id] = new_pos;
 
 		auto en = energy[id];
 		float height = new_pos.y / Aquarium::HEIGHT;
-		float energyLoss = 0.001f;
-		float energyGain = lerp(0.000075f, 0.00125f, height);
+		float energyLoss = Algae::ENERGY_LOSS;
+		float energyGain = lerp(0.0f, 1.5f * Algae::ENERGY_LOSS, height);
 		en -= energyLoss;
 		en += energyGain;
 

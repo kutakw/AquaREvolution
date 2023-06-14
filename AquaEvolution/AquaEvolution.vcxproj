@@ -90,6 +90,8 @@
     <CudaCompile Include="aquarium.cu" />
     <CudaCompile Include="fish.cu" />
     <CudaCompile Include="kernel.cu" />
+    <CudaCompile Include="reproduction.cu" />
+    <CudaCompile Include="sort.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\cuda\error.cuh" />
@@ -103,6 +105,8 @@
     <ClInclude Include="headers\simulation\structs\fish.cuh" />
     <ClInclude Include="headers\simulation\structs\fish_functor.cuh" />
     <ClInclude Include="headers\simulation\structs\generators.cuh" />
+    <ClInclude Include="headers\simulation\structs\reproduction.cuh" />
+    <ClInclude Include="headers\simulation\structs\sort.cuh" />
     <ClInclude Include="headers\window.cuh" />
   </ItemGroup>
   <ItemGroup>

@@ -13,6 +13,8 @@ enum class FishDecisionEnum {
 #include <thrust/host_vector.h>
 
 struct Fish {
+	static constexpr float MAX_ENERGY = 50.0f;
+	static constexpr float ENERGY_PER_KID = 10.0f;
 
 	using Entity = entity<float2, float2, bool, float, FishDecisionEnum, uint64_t>;
 	using EntityIter = entityIter<float2, float2, bool, float, FishDecisionEnum, uint64_t>;

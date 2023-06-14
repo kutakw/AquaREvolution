@@ -10,6 +10,12 @@
 #include <thrust/host_vector.h>
 
 struct Algae {
+	static constexpr float INIT_ENERGY = 25.0f;
+	static constexpr float MAX_ENERGY = 50.0f;
+	static constexpr float ENERGY_LOSS = 0.1f;
+	static constexpr float ENERGY_MINIMUM_TO_REPRODUCT = 10.0f;
+	static constexpr float ENERGY_PER_KID = 10.0f;
+	static constexpr float VELOCITY = 1e-3f;
 
 	using Entity = entity<float2, float2, bool, float>;
 	using EntityIter = entityIter<float2, float2, bool, float>;

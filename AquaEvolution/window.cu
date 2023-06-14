@@ -32,8 +32,8 @@ void Window::renderLoop(Aquarium& aquarium) {
 		processInput();
 
 		aquarium.simulateGeneration();
-		aquarium.fish.update(aquarium.fish.host, aquarium.fish.device);
-		aquarium.algae.update(aquarium.algae.host, aquarium.algae.device);
+		aquarium.fish->update(aquarium.fish->host, aquarium.fish->device);
+		aquarium.algae->update(aquarium.algae->host, aquarium.algae->device);
 
 		// render scene
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -54,7 +54,7 @@ void Window::renderAquarium(Aquarium& aquarium) {
 	shader.setMat4("mvp", glm::mat4(1.0f));
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-	auto& f = aquarium.fish.host;
+	auto& f = aquarium.fish->host;
 	for (uint64_t i = 0; i < f.positions.size(); ++i)
 	{
 		//if (!f.alives[i]) continue;
@@ -73,7 +73,7 @@ void Window::renderAquarium(Aquarium& aquarium) {
 		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
 	}
 
-	auto& a = aquarium.algae.host;
+	auto& a = aquarium.algae->host;
 	for (uint64_t i = 0; i < a.positions.size(); ++i)
 	{
 		if (!a.alives[i]) continue;
