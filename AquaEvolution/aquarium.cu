@@ -7,9 +7,11 @@
 #include <simulation/structs/algae_functor.cuh>
 #include <cuda/error.cuh>
 
-#include <thrust/async/for_each.h>
-#include <thrust/async/sort.h>
-#include <thrust/async/transform.h>
+//#include <thrust/async/for_each.h>
+//#include <thrust/async/sort.h>
+//#include <thrust/async/transform.h>
+#include <thrust/execution_policy.h>
+#include <thrust/transform.h>
 #include <thrust/for_each.h>
 #include <thrust/sort.h>
 #include <thrust/random.h>
@@ -34,7 +36,8 @@ void Aquarium::generateLife()
 	auto countIter = thrust::counting_iterator<uint32_t>(0);
 	fish->resize(fish->device, n);
 	auto it = fish->device.iter();
-	auto res = thrust::async::transform(thrust::device, countIter, countIter + n, it.get_head(), GenerateFishFunctor());
+	//auto res = thrust::async::transform(thrust::device, countIter, countIter + n, it.get_head(), GenerateFishFunctor());
+	auto res = thrust::transform(thrust::device, countIter, countIter + n, it.get_head(), GenerateFishFunctor());
 	//thrust::transform(thrust::device, countIter, countIter + n, fish->device.positions.begin(), GeneratePos());
 	//thrust::transform(thrust::device, countIter, countIter + n, fish->device.directionVecs.begin(), GenerateVector());
 	//thrust::fill(thrust::device, fish->device.alives.begin(), fish->device.alives.end(), true);
@@ -44,14 +47,14 @@ void Aquarium::generateLife()
 	auto countIter2 = thrust::counting_iterator<uint32_t>(0);
 	algae->resize(algae->device, n2);
 	auto it2 = algae->device.iter();
-	auto res2 = thrust::async::transform(thrust::device, countIter2, countIter2 + n2, it2.get_head(), GenerateAlgaeFunctor());
+	auto res2 = thrust::transform(thrust::device, countIter2, countIter2 + n2, it2.get_head(), GenerateAlgaeFunctor());
 	//thrust::transform(thrust::device, countIter, countIter + n2, algae->device.positions.begin(), GeneratePos());
 	//thrust::transform(thrust::device, countIter, countIter + n2, algae->device.directionVecs.begin(), GenerateVector());
 	//thrust::fill(thrust::device, algae->device.alives.begin(), algae->device.alives.end(), true);
 	//thrust::fill(thrust::device, algae->device.currentEnergy.begin(), algae->device.currentEnergy.end(), 25.0f);
 
-	res.wait();
-	res2.wait();
+	//res.wait();
+	//res2.wait();
 
 	algae->update(algae->host, algae->device);
 	fish->update(fish->host, fish->device);
@@ -72,6 +75,7 @@ void Aquarium::simulateGeneration() {
 	//std::cout << static_cast<long long>(100) * 1000 / time.count() << std::endl;
 
 	reproduction_algae();
+	reproduction_fish();
 }
 
 
@@ -92,7 +96,7 @@ void Aquarium::decision()
 			count + N
 		));
 
-	auto res = thrust::async::for_each(
+	auto res = thrust::for_each(
 		thrust::device,
 		begin, end,
 		FishDecisionFunctor(
@@ -123,7 +127,7 @@ void Aquarium::decision()
 			count2 + N2
 		));
 
-	auto res2 = thrust::async::for_each(
+	auto res2 = thrust::for_each(
 		thrust::device,
 		begin2, end2,
 		AlgaeDecisionFunctor(
@@ -131,8 +135,8 @@ void Aquarium::decision()
 			algae->device.directionVecs)
 	);
 
-	res.wait();
-	res2.wait();
+	//res.wait();
+	//res2.wait();
 }
 
 void Aquarium::move()
@@ -152,7 +156,7 @@ void Aquarium::move()
 			count + N
 		));
 
-	auto res = thrust::async::for_each(
+	auto res = thrust::for_each(
 		thrust::device,
 		begin, end,
 		FishMoveFunctor(
@@ -178,7 +182,7 @@ void Aquarium::move()
 			count2 + N2
 		));
 
-	auto res2 = thrust::async::for_each(
+	auto res2 = thrust::for_each(
 		thrust::device,
 		begin2, end2,
 		AlgaeMoveFunctor(
@@ -188,9 +192,6 @@ void Aquarium::move()
 			algae->device.currentEnergy,
 			algae->device.alives)
 	);
-
-	res.wait();
-	res2.wait();
 }
 
 

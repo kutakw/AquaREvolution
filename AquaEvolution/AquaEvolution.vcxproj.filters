@@ -32,6 +32,7 @@
     <ClInclude Include="headers\simulation\structs\fish_functor.cuh" />
     <ClInclude Include="headers\simulation\structs\sort.cuh" />
     <ClInclude Include="headers\simulation\structs\reproduction.cuh" />
+    <ClInclude Include="headers\simulation\structs\mutation.cuh" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c" />

@@ -18,14 +18,15 @@ struct Aquarium {
 	static constexpr float WIDTH = 100.f;
 	static constexpr float HEIGHT = 100.f;
 	
-	static constexpr uint64_t FISH_START = 0;
+	static constexpr uint64_t FISH_START = 10;
 	static constexpr uint64_t ALGAE_START = 1000;
 
 	static constexpr ulonglong2 CELL = { 100, 100 };
 
 	static constexpr int32_t ITER_PER_GENERATION = 10000;
 
-	int currentBuffer = 0;
+	int currentAlgaeBuffer = 0;
+	int currentFishBuffer = 0;
 	Fish fishBuffer[2]{ Fish(FISH_MAX_COUNT), Fish(FISH_MAX_COUNT) };
 	Algae algaeBuffer[2]{ Algae(ALGAE_MAX_COUNT), Algae(ALGAE_MAX_COUNT) };
 
@@ -46,6 +47,7 @@ private:
 	void sort_algae();
 
 	void reproduction_algae();
+	void reproduction_fish();
 		
 };
 

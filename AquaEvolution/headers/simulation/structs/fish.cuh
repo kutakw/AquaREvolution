@@ -14,10 +14,17 @@ enum class FishDecisionEnum {
 
 struct Fish {
 	static constexpr float MAX_ENERGY = 50.0f;
+	static constexpr float INITAL_ENERGY = 25.0f;
 	static constexpr float ENERGY_PER_KID = 10.0f;
+	static constexpr float ENERGY_MINIMUM_TO_REPRODUCT = 15.0f;
+	static constexpr float ENERGY_PER_ALGA_EATEN = 1.0f;
+	static constexpr float SIGHT_DIST = 10.0f;
+	static constexpr float SIGHT_ANGLE = 0.0f;
+	static constexpr float VELOCITY = 2e-3f;
+	static constexpr float ENERGY_DECAY_RATE = 0.1f;
 
-	using Entity = entity<float2, float2, bool, float, FishDecisionEnum, uint64_t>;
-	using EntityIter = entityIter<float2, float2, bool, float, FishDecisionEnum, uint64_t>;
+	using Entity = entity<float2, float2, bool, float, FishDecisionEnum, uint64_t, float2, float2, float>;
+	using EntityIter = entityIter<float2, float2, bool, float, FishDecisionEnum, uint64_t, float2, float2, float>;
 
 	struct Host {
 		thrust::host_vector<float2> positions;
@@ -26,7 +33,9 @@ struct Fish {
 		thrust::host_vector<float> currentEnergy;
 		thrust::host_vector<FishDecisionEnum> nextDecisions;
 		thrust::host_vector<uint64_t> eatenAlgaeId;
-
+		thrust::host_vector<float2> energyParams; // max, decay
+		thrust::host_vector<float2> sightParams; // dist, angle
+		thrust::host_vector<float> velocity;
 	} host;
 	struct Device {
 		thrust::device_vector<float2> positions;
@@ -35,6 +44,9 @@ struct Fish {
 		thrust::device_vector<float> currentEnergy;
 		thrust::device_vector<FishDecisionEnum> nextDecisions;
 		thrust::device_vector<uint64_t> eatenAlgaeId;
+		thrust::device_vector<float2> energyParams; // max, decay
+		thrust::device_vector<float2> sightParams; // dist, angle
+		thrust::device_vector<float> velocity;
 
 		thrust::tuple<thrust::zip_iterator<EntityIter>, thrust::zip_iterator<EntityIter>> iter();
 	} device;
@@ -54,6 +66,9 @@ struct Fish {
 		dest.currentEnergy = src.currentEnergy;
 		dest.nextDecisions = src.nextDecisions;
 		dest.eatenAlgaeId = src.eatenAlgaeId;
+		dest.energyParams = src.energyParams;
+		dest.sightParams = src.sightParams;
+		dest.velocity = src.velocity;
 	}
 
 public:
@@ -66,6 +81,9 @@ public:
 		t.currentEnergy.reserve(capacity);
 		t.nextDecisions.reserve(capacity);
 		t.eatenAlgaeId.reserve(capacity);
+		t.energyParams.reserve(capacity);
+		t.sightParams.reserve(capacity);
+		t.velocity.reserve(capacity);
 	}
 
 	template <class T>
@@ -77,6 +95,9 @@ public:
 		t.currentEnergy.resize(size);
 		t.nextDecisions.resize(size);
 		t.eatenAlgaeId.resize(size);
+		t.energyParams.resize(size);
+		t.sightParams.resize(size);
+		t.velocity.resize(size);
 	}
 };
 #else

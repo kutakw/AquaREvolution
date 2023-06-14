@@ -10,7 +10,10 @@ thrust::tuple<thrust::zip_iterator<Fish::EntityIter>, thrust::zip_iterator<Fish:
 		alives.begin(),
 		currentEnergy.begin(),
 		nextDecisions.begin(),
-		eatenAlgaeId.begin()
+		eatenAlgaeId.begin(),
+		energyParams.begin(),
+		sightParams.begin(),
+		velocity.begin()
 	));
 	auto end = thrust::make_zip_iterator(
 		thrust::make_tuple(
@@ -19,7 +22,10 @@ thrust::tuple<thrust::zip_iterator<Fish::EntityIter>, thrust::zip_iterator<Fish:
 		alives.end(),
 		currentEnergy.end(),
 		nextDecisions.end(),
-		eatenAlgaeId.end()
+		eatenAlgaeId.end(),
+		energyParams.end(),
+		sightParams.end(),
+		velocity.end()
 	));
 
 	return thrust::make_tuple(begin, end);

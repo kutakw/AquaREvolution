@@ -17,11 +17,18 @@ struct GenerateFishFunctor {
 
 		float2 vec = normalize(make_float2(dist(rng), dist(rng)));
 		float2 pos = make_float2(dist(rng) * (Aquarium::WIDTH - 2.0f) + 1.0f, dist(rng) * (Aquarium::HEIGHT - 2.0f) + 1.0f);
-		bool alive = true;
-		float currentEnergy = 25.0f;
-		FishDecisionEnum next = FishDecisionEnum::NONE;
-		uint64_t eatenAlgaeId = -1;
-		return thrust::make_tuple(pos, vec, alive, currentEnergy, next, eatenAlgaeId);
+		float2 energyParams = make_float2(Fish::MAX_ENERGY, Fish::ENERGY_DECAY_RATE);
+		float2 sightParams = make_float2(Fish::SIGHT_DIST, Fish::SIGHT_ANGLE);
+		return thrust::make_tuple(
+			pos, 
+			vec, 
+			true, 
+			Fish::INITAL_ENERGY, 
+			FishDecisionEnum::NONE, 
+			(uint64_t)-1,
+			energyParams,
+			sightParams,
+			Fish::VELOCITY);
 	}
 };
 
@@ -38,7 +45,6 @@ struct FishDecisionFunctor {
 
 	uint64_t* bucket;
 
-	
 	__host__ __device__
 		FishDecisionFunctor(
 			uint64_t algae_size_,
@@ -218,18 +224,19 @@ struct FishDecisionFunctor {
 		float2 algaPos = algae_pos[algaId];
 		float2 fishPos = e.get<0>();
 		float2 fishVec = e.get<1>();
+		float2 fishSightParams = { 3.0f,3.0f };//e.get<7>(); // dist, angle
 
 		float2 vecToAlga = algaPos - fishPos;
 
 		float dist = length(vecToAlga);
 
 		//check distance
-		if (dist > 10.0f)
+		if (dist > fishSightParams.x)
 			return -1.f;
 
 		//// check angle
 		float cosine = dot(fishVec, vecToAlga/dist);
-		if (cosine < 0.0f)
+		if (cosine < fishSightParams.y)
 			return -1.f;
 
 		return dist;
@@ -268,6 +275,9 @@ struct FishMoveFunctor {
 
 		auto decision = e.get<4>();
 		auto en = e.get<3>();
+		float velocity = 2e-3f;//e.get<8>();
+		float2 energyParams = { 50.f,0.1f };// e.get<6>(); // max, decay
+		
 		switch (decision)
 		{
 		case FishDecisionEnum::NONE:
@@ -282,18 +292,18 @@ struct FishMoveFunctor {
 			float2 p = pos[id];
 			float2 v = vec[id];
 
-			pos[id] = p + v * 0.002f;
+			pos[id] = p + v * velocity;
 			//pos[id] = p + v * 0.02f;
 			break;
 		}
 		case FishDecisionEnum::EAT:
 		{
-			en += 0.15f;
+			en += Fish::ENERGY_PER_ALGA_EATEN;
 			break;
 		}
 		}
 
-		en -= 0.01f;
+		en -= energyParams.y;
 
 		// Check if fish alive
 		if (energy <= 0)
@@ -302,7 +312,7 @@ struct FishMoveFunctor {
 			alives[id] = false;
 		}
 
-		energy[id] = min(en, 50.0f);
+		energy[id] = min(en, energyParams.x);
 	}
 };
 
