@@ -6,9 +6,12 @@
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
 
+//#include <cuda_runtime.h>
+//#include <device_launch_parameters.h>
+
 struct Mutation {
 
-	static constexpr int MUTATION_COUNT = 5;
+	static constexpr int MUTATION_COUNT = 6;
 
 	using Entity = entity<float2, float2, float>;
 	using EntityIter = entityIter<float2, float2, float>;

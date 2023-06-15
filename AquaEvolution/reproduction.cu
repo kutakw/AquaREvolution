@@ -62,27 +62,48 @@ struct GeneratorAlgae {
 };
 
 struct GeneratorFish {
+
+	float2* energyAlterations;
+	float2* sightAlterations;
+	float* velocityAlterations;
+
+	__host__ __device__
+		GeneratorFish(
+			uint64_t mutationID,
+			thrust::device_vector<float2>& energyAlteration_,
+			thrust::device_vector<float2>& sightAlteration_,
+			thrust::device_vector<float>& velocityAlteration_
+		) 
+	{
+		/*float2**/ energyAlterations = energyAlteration_.data().get();
+		/*float2**/ sightAlterations = sightAlteration_.data().get();
+		/*float**/ velocityAlterations = velocityAlteration_.data().get();
+
+		//energyAlteration = energyAlteration_[mutationID];
+		//sightAlteration = sightAlteration_[mutationID];
+		//velocityAlteration = velocityAlteration_[mutationID];
+	}
+
 	using tup = thrust::tuple<Fish::Entity, uint32_t>;
 	__device__
 		Fish::Entity operator()(const tup& n) const
 	{
 		thrust::default_random_engine rng;
 		thrust::uniform_real_distribution<float> dist(-1, 1);
+		thrust::uniform_real_distribution<uint64_t> mutation(0, Mutation::MUTATION_COUNT);
+		uint64_t mutationId = mutation(rng);
 		rng.discard(n.get<1>());
 
 		auto fishEntity = n.get<0>();
 		float2 pos = fishEntity.get<0>();
 		float2 vec = normalize(make_float2(dist(rng), dist(rng)));
-		float2 energyParams = fishEntity.get<6>();
-		float2 sightParams = fishEntity.get<7>();
-		float velocity = fishEntity.get<8>();
+		float2 energyParams = fishEntity.get<6>() * energyAlterations[mutationId];
+		float2 sightParams = fishEntity.get<7>() * sightAlterations[mutationId];
+		float velocity = fishEntity.get<8>() * velocityAlterations[mutationId];
 		bool alive = true;
 		float currentEnergy = fminf(Fish::INITAL_ENERGY, energyParams.x);
 		FishDecisionEnum next = FishDecisionEnum::NONE;
 		uint64_t eatenAlgaeId = -1;
-
-		//traits and mutations
-		// TO DO
 
 		return thrust::make_tuple(pos, vec, alive, currentEnergy, next, eatenAlgaeId,energyParams,sightParams,velocity);
 	}
@@ -180,17 +201,20 @@ void Aquarium::reproduction_fish()
 
 	auto& backIter = back->device.iter().get_head();
 	auto countIter = thrust::make_counting_iterator<uint32_t>(0);
+	uint64_t i = 0;
 	while (childrenLeft > minLeft) {
 
 		if (childrenInLoop > childrenLeft - minLeft)
 			childrenInLoop = childrenLeft - minLeft;
 
 		auto it = fish->device.iter();
+		uint64_t mutationId = i % fish->capacity;
 		thrust::transform(
+			thrust::device,
 			thrust::make_zip_iterator(thrust::make_tuple(it.get_head(), countIter)),
 			thrust::make_zip_iterator(thrust::make_tuple(it.get_head() + childrenInLoop, countIter + childrenInLoop)),
 			backIter,
-			GeneratorFish()
+			GeneratorFish(mutationId,mutation.device.energyAlteration, mutation.device.sightAlteration, mutation.device.velocityAlteration)
 		);
 
 		backIter += childrenInLoop;
@@ -199,6 +223,7 @@ void Aquarium::reproduction_fish()
 		childrenLeft = thrust::reduce(dc.begin(), dc.end());
 		childrenInLoop = thrust::transform_reduce(
 			dc.begin(), dc.end(), ChildrenPerIterFunctor(), 0, thrust::plus<int32_t>());
+		i++;
 	}
 
 	fish = back;

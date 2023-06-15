@@ -17,7 +17,7 @@ struct Fish {
 	static constexpr float INITAL_ENERGY = 50.0f;
 	static constexpr float ENERGY_PER_KID = 10.0f;
 	static constexpr float ENERGY_MINIMUM_TO_REPRODUCT = 15.0f;
-	static constexpr float ENERGY_PER_ALGA_EATEN = 1.0f;
+	static constexpr float ENERGY_PER_ALGA_EATEN = 5.0f;
 	static constexpr float SIGHT_DIST = 10.0f;
 	static constexpr float SIGHT_ANGLE = 0.0f;
 	static constexpr float VELOCITY = 2e-3f;

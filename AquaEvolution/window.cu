@@ -25,6 +25,7 @@ Window::~Window() {
 void Window::renderLoop(Aquarium& aquarium) {
 
 	aquarium.generateLife();
+	aquarium.generateMutations();
 
 	while (!glfwWindowShouldClose(window))
 	{
