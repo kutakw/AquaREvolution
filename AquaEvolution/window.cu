@@ -76,12 +76,12 @@ void Window::renderAquarium(Aquarium& aquarium) {
 	{
 		//if (!f.alives[i]) continue;
 		auto& pos = f.positions[i];
-		//auto& vec = f.directionVecs[i];
+		auto& vec = f.directionVecs[i];
 
 		shader.setMat4("mvp", Shader::getMVP(
 			pos,
-			float2{ 1.0f, 0.0f },
-			//vec,
+			//float2{ 1.0f, 0.0f },
+			vec,
 			.5f)
 		);
 

@@ -19,16 +19,18 @@ struct GenerateFishFunctor {
 		float2 pos = make_float2(dist(rng) * (Aquarium::WIDTH - 2.0f) + 1.0f, dist(rng) * (Aquarium::HEIGHT - 2.0f) + 1.0f);
 		float2 energyParams = make_float2(Fish::MAX_ENERGY, Fish::ENERGY_DECAY_RATE);
 		float2 sightParams = make_float2(Fish::SIGHT_DIST, Fish::SIGHT_ANGLE);
+		float energy = Fish::INITAL_ENERGY;
+		float velocity = Fish::VELOCITY;
 		return thrust::make_tuple(
 			pos, 
 			vec, 
 			true, 
-			Fish::INITAL_ENERGY, 
+			energy, 
 			FishDecisionEnum::NONE, 
 			(uint64_t)-1,
 			energyParams,
 			sightParams,
-			Fish::VELOCITY);
+			velocity);
 	}
 };
 
@@ -224,7 +226,7 @@ struct FishDecisionFunctor {
 		float2 algaPos = algae_pos[algaId];
 		float2 fishPos = e.get<0>();
 		float2 fishVec = e.get<1>();
-		float2 fishSightParams = { 3.0f,3.0f };//e.get<7>(); // dist, angle
+		float2 fishSightParams = e.get<7>(); // dist, angle
 
 		float2 vecToAlga = algaPos - fishPos;
 
@@ -275,8 +277,8 @@ struct FishMoveFunctor {
 
 		auto decision = e.get<4>();
 		auto en = e.get<3>();
-		float velocity = 2e-3f;//e.get<8>();
-		float2 energyParams = { 50.f,0.1f };// e.get<6>(); // max, decay
+		float velocity = e.get<8>();
+		float2 energyParams = e.get<6>(); // max, decay
 		
 		switch (decision)
 		{

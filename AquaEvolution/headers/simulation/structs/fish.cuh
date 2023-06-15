@@ -14,7 +14,7 @@ enum class FishDecisionEnum {
 
 struct Fish {
 	static constexpr float MAX_ENERGY = 50.0f;
-	static constexpr float INITAL_ENERGY = 25.0f;
+	static constexpr float INITAL_ENERGY = 50.0f;
 	static constexpr float ENERGY_PER_KID = 10.0f;
 	static constexpr float ENERGY_MINIMUM_TO_REPRODUCT = 15.0f;
 	static constexpr float ENERGY_PER_ALGA_EATEN = 1.0f;

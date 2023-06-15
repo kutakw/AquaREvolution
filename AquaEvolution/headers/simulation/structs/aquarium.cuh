@@ -3,6 +3,7 @@
 
 #include <simulation/structs/fish.cuh>
 #include <simulation/structs/algae.cuh>
+#include <simulation/structs/mutation.cuh>
 #include <cuda/helper_math.cuh>
 
 
@@ -13,17 +14,17 @@
 
 struct Aquarium {
 	static constexpr uint64_t FISH_MAX_COUNT = 10000;
-	static constexpr uint64_t ALGAE_MAX_COUNT = 50000;
+	static constexpr uint64_t ALGAE_MAX_COUNT = 30000;
 
 	static constexpr float WIDTH = 100.f;
 	static constexpr float HEIGHT = 100.f;
 	
-	static constexpr uint64_t FISH_START = 10;
+	static constexpr uint64_t FISH_START = 100;
 	static constexpr uint64_t ALGAE_START = 1000;
 
 	static constexpr ulonglong2 CELL = { 100, 100 };
 
-	static constexpr int32_t ITER_PER_GENERATION = 10000;
+	static constexpr int32_t ITER_PER_GENERATION = 1000;
 
 	int currentAlgaeBuffer = 0;
 	int currentFishBuffer = 0;
@@ -32,6 +33,7 @@ struct Aquarium {
 
 	Fish* fish;
 	Algae* algae;
+	Mutation mutation;
 
 	thrust::device_vector<uint64_t> algaeKeys;
 	thrust::device_vector<uint64_t> algaeBucketIds;
@@ -39,6 +41,7 @@ struct Aquarium {
 	Aquarium();
 
 	void generateLife();
+	void generateMutations();
 	void simulateGeneration();
 private:
 	void decision();

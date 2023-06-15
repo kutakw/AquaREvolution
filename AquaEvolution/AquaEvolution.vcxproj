@@ -164,6 +164,7 @@
     <CudaCompile Include="aquarium.cu" />
     <CudaCompile Include="fish.cu" />
     <CudaCompile Include="kernel.cu" />
+    <CudaCompile Include="mutation.cu" />
     <CudaCompile Include="reproduction.cu" />
     <CudaCompile Include="sort.cu" />
   </ItemGroup>

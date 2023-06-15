@@ -166,7 +166,7 @@ void Aquarium::reproduction_fish()
 	int32_t minLeft = 0;
 	int32_t childrenInLoop = thrust::transform_reduce(
 		dc.begin(), dc.end(), ChildrenPerIterFunctor(), 0, thrust::plus<int32_t>());
-	std::cout << "reduction: " << childrenLeft << std::endl;
+	std::cout << "fish reduction: " << childrenLeft << std::endl;
 
 	Fish* back = &fishBuffer[1 - currentFishBuffer];
 	if (childrenLeft > back->capacity) {
@@ -180,12 +180,12 @@ void Aquarium::reproduction_fish()
 	while (childrenLeft > minLeft) {
 
 		auto it = fish->device.iter();
-		//thrust::transform(
-		//	thrust::make_zip_iterator(thrust::make_tuple(it.get_head(), countIter)),
-		//	thrust::make_zip_iterator(thrust::make_tuple(it.get_head() + childrenInLoop, countIter + childrenInLoop)),
-		//	backIter,
-		//	GeneratorFish()
-		//);
+		thrust::transform(
+			thrust::make_zip_iterator(thrust::make_tuple(it.get_head(), countIter)),
+			thrust::make_zip_iterator(thrust::make_tuple(it.get_head() + childrenInLoop, countIter + childrenInLoop)),
+			backIter,
+			GeneratorFish()
+		);
 
 		backIter += childrenInLoop;
 
