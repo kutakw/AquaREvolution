@@ -124,6 +124,9 @@ void Aquarium::reproduction_algae() {
 	auto countIter = thrust::make_counting_iterator<uint32_t>(0);
 	while (childrenLeft > minLeft) {
 
+		if (childrenInLoop > childrenLeft - minLeft)
+			childrenInLoop = childrenLeft - minLeft;
+
 		thrust::transform(
 			thrust::make_zip_iterator(thrust::make_tuple(algae->device.positions.begin(), countIter)),
 			thrust::make_zip_iterator(thrust::make_tuple(algae->device.positions.begin() + childrenInLoop, countIter + childrenInLoop)),
@@ -178,6 +181,9 @@ void Aquarium::reproduction_fish()
 	auto& backIter = back->device.iter().get_head();
 	auto countIter = thrust::make_counting_iterator<uint32_t>(0);
 	while (childrenLeft > minLeft) {
+
+		if (childrenInLoop > childrenLeft - minLeft)
+			childrenInLoop = childrenLeft - minLeft;
 
 		auto it = fish->device.iter();
 		thrust::transform(
