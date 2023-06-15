@@ -98,7 +98,9 @@ struct GeneratorFish {
 		float2 pos = fishEntity.get<0>();
 		float2 vec = normalize(make_float2(dist(rng), dist(rng)));
 		float2 energyParams = fishEntity.get<6>() * energyAlterations[mutationId];
-		float2 sightParams = fishEntity.get<7>() * sightAlterations[mutationId];
+		float2 sightParams = fishEntity.get<7>();
+		sightParams.x *= sightAlterations[mutationId].x;
+		sightParams.y == clamp(sightParams.y + sightAlterations[mutationId].y,-1.f,1.f);
 		float velocity = fishEntity.get<8>() * velocityAlterations[mutationId];
 		bool alive = true;
 		float currentEnergy = fminf(Fish::INITAL_ENERGY, energyParams.x);

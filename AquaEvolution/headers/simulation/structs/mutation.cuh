@@ -18,12 +18,12 @@ struct Mutation {
 
 	struct Host {
 		thrust::host_vector<float2> energyAlteration;
-		thrust::host_vector<float2> sightAlteration;
+		thrust::host_vector<float2> sightAlteration;  // (dist -> multiplier, angle -> addition)
 		thrust::host_vector<float> velocityAlteration;
 	} host;	
 	struct Device {
 		thrust::device_vector<float2> energyAlteration; // max, decay
-		thrust::device_vector<float2> sightAlteration; // dist, angle
+		thrust::device_vector<float2> sightAlteration; // (dist -> multiplier, angle -> addition)
 		thrust::device_vector<float> velocityAlteration;
 
 		thrust::tuple<thrust::zip_iterator<EntityIter>, thrust::zip_iterator<EntityIter>>iter();
