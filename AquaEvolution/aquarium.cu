@@ -1,26 +1,19 @@
 #include <simulation/structs/aquarium.cuh>
-
 #include <chrono>
-
 #include <simulation/structs/generators.cuh>
 #include <simulation/structs/fish_functor.cuh>
 #include <simulation/structs/algae_functor.cuh>
 #include <cuda/error.cuh>
-
-//#include <thrust/async/for_each.h>
-//#include <thrust/async/sort.h>
-//#include <thrust/async/transform.h>
 #include <thrust/execution_policy.h>
 #include <thrust/transform.h>
 #include <thrust/for_each.h>
 #include <thrust/sort.h>
 #include <thrust/random.h>
-
 #include <thrust/iterator/zip_iterator.h>
 #include <thrust/iterator/constant_iterator.h>
-
 #include <cuda_runtime.h>
 #include <device_launch_parameters.h>
+#include "config.h"
 
 Aquarium::Aquarium() :
 	fish(fishBuffer),

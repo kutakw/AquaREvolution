@@ -17,11 +17,11 @@ struct GenerateFishFunctor {
 		//rng.discard(n);
 
 		float2 vec = normalize(make_float2(dist(rng), dist(rng)));
-		float2 pos = make_float2(dist(rng) * (Aquarium::WIDTH - 2.0f) + 1.0f, dist(rng) * (Aquarium::HEIGHT - 2.0f) + 1.0f);
-		float2 energyParams = make_float2(Fish::MAX_ENERGY, Fish::ENERGY_DECAY_RATE);
-		float2 sightParams = make_float2(Fish::SIGHT_DIST, Fish::SIGHT_ANGLE);
-		float energy = Fish::INITAL_ENERGY;
-		float velocity = Fish::VELOCITY;
+		float2 pos = make_float2(dist(rng) * (WIDTH - 2.0f) + 1.0f, dist(rng) * (HEIGHT - 2.0f) + 1.0f);
+		float2 energyParams = make_float2(FISH_MAX_ENERGY, FISH_ENERGY_DECAY_RATE);
+		float2 sightParams = make_float2(FISH_SIGHT_DIST, FISH_SIGHT_ANGLE);
+		float energy = FISH_INITAL_ENERGY;
+		float velocity = FISH_VELOCITY;
 		return thrust::make_tuple(
 			pos, 
 			vec, 
@@ -86,21 +86,7 @@ struct FishDecisionFunctor {
 		uint64_t algae_id = -1;
 		float dist = FLT_MAX;
 
-#if 0
-		for (uint64_t i = 0; i < algae_size; ++i) {
-			if (!algae_alive[i]) continue;
-
-			auto& alg_pos = algae_pos[i];
-			float new_dist = length(pos - alg_pos);
-
-			if (algae_id != -1 && new_dist > dist) continue;
-			dist = new_dist;
-			algae_id = i;
-		}
-
-#else 
 		algae_id = findClosestAlga(e, &dist);
-#endif
 
 		if (algae_id == -1) {
 			fish_next[id] = FishDecisionEnum::NONE;
@@ -134,7 +120,7 @@ struct FishDecisionFunctor {
 	__device__ int findClosestAlga(Fish::Entity& e, float* distToBeat)
 	{
 		auto& pos = e.get<0>();
-		uint2 fishCell = { (uint)(pos.x * Aquarium::CELL.x / Aquarium::WIDTH), (uint)(pos.y * Aquarium::CELL.y / Aquarium::HEIGHT) };
+		uint2 fishCell = { (uint)(pos.x *CELL.x / WIDTH), (uint)(pos.y * CELL.y / HEIGHT) };
 
 		//check same cell
 		int closest_algae_id = findClosestAlgaInCell(e, fishCell, distToBeat);
@@ -154,14 +140,14 @@ struct FishDecisionFunctor {
 				if (tmp != -1) closest_algae_id = tmp;
 			}
 			// right above
-			if (fishCell.x < Aquarium::CELL.x - 1)
+			if (fishCell.x < CELL.x - 1)
 			{
 				tmp = findClosestAlgaInCell(e, { fishCell.x + 1, fishCell.y - 1 }, distToBeat);
 				if (tmp != -1) closest_algae_id = tmp;
 			}
 		}
 		// check cell below
-		if (fishCell.y < Aquarium::CELL.y - 1)
+		if (fishCell.y < CELL.y - 1)
 		{
 			// directly below
 			tmp = findClosestAlgaInCell(e, { fishCell.x, fishCell.y + 1 }, distToBeat);
@@ -174,7 +160,7 @@ struct FishDecisionFunctor {
 				if (tmp != -1) closest_algae_id = tmp;
 			}
 			// right below
-			if (fishCell.x < Aquarium::CELL.x - 1)
+			if (fishCell.x < CELL.x - 1)
 			{
 				tmp = findClosestAlgaInCell(e, { fishCell.x + 1, fishCell.y + 1 }, distToBeat);
 				if (tmp != -1) closest_algae_id = tmp;
@@ -187,7 +173,7 @@ struct FishDecisionFunctor {
 			if (tmp != -1) closest_algae_id = tmp;
 		}
 		// check cell on the right
-		if (fishCell.x < Aquarium::CELL.x - 1)
+		if (fishCell.x < CELL.x - 1)
 		{
 			tmp = findClosestAlgaInCell(e, { fishCell.x + 1, fishCell.y }, distToBeat);
 			if (tmp != -1) closest_algae_id = tmp;
@@ -199,11 +185,11 @@ struct FishDecisionFunctor {
 	__device__ int findClosestAlgaInCell(Fish::Entity& e, uint2 cell, float* distToBeat)
 	{
 		int closest_alga_id = -1;
-		int cellArrayIdx = cell.x + cell.y * Aquarium::CELL.x;
+		int cellArrayIdx = cell.x + cell.y * CELL.x;
 
 		auto alga_id = bucket[cellArrayIdx];
 		auto end = 
-			cellArrayIdx == (Aquarium::CELL.x * Aquarium::CELL.y - 1) 
+			cellArrayIdx == (CELL.x * CELL.y - 1) 
 			? algae_size 
 			: bucket[cellArrayIdx + 1];
 
@@ -301,7 +287,7 @@ struct FishMoveFunctor {
 		}
 		case FishDecisionEnum::EAT:
 		{
-			en += Fish::ENERGY_PER_ALGA_EATEN;
+			en += FISH_ENERGY_PER_ALGA_EATEN;
 			break;
 		}
 		}

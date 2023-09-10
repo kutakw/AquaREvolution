@@ -1,5 +1,4 @@
 #include <simulation/structs/fish.cuh>
-
 #include <thrust/iterator/zip_iterator.h>
 
 thrust::tuple<thrust::zip_iterator<Fish::EntityIter>, thrust::zip_iterator<Fish::EntityIter>> Fish::Device::iter() {

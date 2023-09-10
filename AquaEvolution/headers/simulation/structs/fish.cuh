@@ -2,24 +2,14 @@
 #define FISH_CUH
 
 #include <simulation/structs/allocator.cuh>
+#include <thrust/device_vector.h>
+#include <thrust/host_vector.h>
 
 enum class FishDecisionEnum {
 	NONE, MOVE, EAT,
 };
 
-#include <thrust/device_vector.h>
-#include <thrust/host_vector.h>
-
 struct Fish {
-	static constexpr float MAX_ENERGY = 50.0f;
-	static constexpr float INITAL_ENERGY = 30.0f;
-	static constexpr float ENERGY_PER_KID = 10.0f;
-	static constexpr float ENERGY_MINIMUM_TO_REPRODUCT = 5.0f;
-	static constexpr float ENERGY_PER_ALGA_EATEN = 3.0f;
-	static constexpr float SIGHT_DIST = 10.0f;
-	static constexpr float SIGHT_ANGLE = 0.0f;
-	static constexpr float VELOCITY = 2e-3f;
-	static constexpr float ENERGY_DECAY_RATE = 0.1f;
 
 	using Entity = entity<float2, float2, bool, float, FishDecisionEnum, uint64_t, float2, float2, float>;
 	using EntityIter = entityIter<float2, float2, bool, float, FishDecisionEnum, uint64_t, float2, float2, float>;
@@ -100,4 +90,5 @@ public:
 		t.velocity.resize(size);
 	}
 };
+
 #endif // !FISH_CUH

@@ -1,10 +1,10 @@
-#include <simulation/structs/reproduction.cuh>
-
+#include <simulation/structs/aquarium.cuh>
 #include <thrust/execution_policy.h>
 #include <thrust/transform.h>
 #include <thrust/transform_reduce.h>
 #include <thrust/sort.h>
 #include <thrust/random.h>
+//#include <../config.h>
 
 struct ChildrenCountFunctorAlgae {
 	__device__
@@ -14,7 +14,7 @@ struct ChildrenCountFunctorAlgae {
 
 		auto energy = e.get<3>();
 
-		int32_t children = fmaxf(energy - Algae::ENERGY_MINIMUM_TO_REPRODUCT, 0.f) / Algae::ENERGY_PER_KID;
+		int32_t children = fmaxf(energy - ALGAE_ENERGY_MINIMUM_TO_REPRODUCT, 0.f) / ALGAE_ENERGY_PER_KID;
 		return children;
 	}
 };
@@ -27,7 +27,7 @@ struct ChildrenCountFunctorFish {
 
 		auto energy = e.get<3>();
 
-		int32_t children = fmaxf(energy - Fish::ENERGY_MINIMUM_TO_REPRODUCT, 0.f) / Fish::ENERGY_PER_KID;
+		int32_t children = fmaxf(energy - FISH_ENERGY_MINIMUM_TO_REPRODUCT, 0.f) / FISH_ENERGY_PER_KID;
 		return children;
 	}
 };
@@ -56,7 +56,7 @@ struct GeneratorAlgae {
 		float2 pos = n.get<0>();
 		float2 vec = normalize(make_float2(dist(rng), dist(rng)));
 		bool alive = true;
-		float currentEnergy = Algae::INIT_ENERGY;
+		float currentEnergy = ALGAE_INIT_ENERGY;
 		return thrust::make_tuple(pos, vec, alive, currentEnergy);
 	}
 };
@@ -99,7 +99,7 @@ struct GeneratorFish {
 		sightParams.y == clamp(sightParams.y + sightAlterations[mutationId].y,-1.f,1.f);
 		float velocity = fishEntity.get<8>() * velocityAlterations[mutationId];
 		bool alive = true;
-		float currentEnergy = fminf(Fish::INITAL_ENERGY, energyParams.x);
+		float currentEnergy = fminf(FISH_INITAL_ENERGY, energyParams.x);
 		FishDecisionEnum next = FishDecisionEnum::NONE;
 		uint64_t eatenAlgaeId = -1;
 

@@ -8,20 +8,9 @@
 
 
 #include <thrust/device_vector.h>
+#include "config.h"
 
 struct Aquarium {
-	static constexpr uint64_t FISH_MAX_COUNT = 10000;
-	static constexpr uint64_t ALGAE_MAX_COUNT = 30000;
-
-	static constexpr float WIDTH = 100.f;
-	static constexpr float HEIGHT = 100.f;
-	
-	static constexpr uint64_t FISH_START = 100;
-	static constexpr uint64_t ALGAE_START = 1000;
-
-	static constexpr ulonglong2 CELL = { 100, 100 };
-
-	static constexpr int32_t ITER_PER_GENERATION = 1000;
 
 	int currentAlgaeBuffer = 0;
 	int currentFishBuffer = 0;

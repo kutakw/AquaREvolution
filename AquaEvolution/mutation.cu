@@ -1,5 +1,4 @@
 #include <simulation/structs/mutation.cuh>
-
 #include<thrust/iterator/zip_iterator.h>
 
 thrust::tuple<thrust::zip_iterator<Mutation::EntityIter>, thrust::zip_iterator<Mutation::EntityIter>> Mutation::Device::iter() {
