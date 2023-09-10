@@ -23,7 +23,6 @@
     </ClInclude>
     <ClInclude Include="headers\cuda\helper_math.cuh" />
     <ClInclude Include="headers\cuda\error.cuh" />
-    <ClInclude Include="headers\simulation\simulation.cuh" />
     <ClInclude Include="headers\simulation\structs\aquarium.cuh" />
     <ClInclude Include="headers\simulation\structs\algae.cuh" />
     <ClInclude Include="headers\simulation\structs\fish.cuh" />
@@ -32,7 +31,6 @@
     <ClInclude Include="headers\simulation\structs\algae_functor.cuh" />
     <ClInclude Include="headers\simulation\structs\fish_functor.cuh" />
     <ClInclude Include="headers\simulation\structs\sort.cuh" />
-    <ClInclude Include="headers\simulation\structs\reproduction.cuh" />
     <ClInclude Include="headers\simulation\structs\mutation.cuh" />
   </ItemGroup>
   <ItemGroup>

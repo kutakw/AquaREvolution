@@ -1,6 +1,0 @@
-#ifndef SIMULATION_CUH
-#define SIMULATION_CUH
-
-
-
-#endif // !SIMULATION_CUH

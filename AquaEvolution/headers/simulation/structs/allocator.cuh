@@ -1,8 +1,6 @@
 #ifndef ALLOCATOR_CUH
 #define ALLOCATOR_CUH
 
-#define THRUST_IMPL
-
 #include <thrust/device_ptr.h>
 #include <thrust/iterator/detail/normal_iterator.h>
 
