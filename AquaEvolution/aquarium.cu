@@ -33,29 +33,18 @@ Aquarium::Aquarium() :
 void Aquarium::generateLife()
 {
 	// TODO: zrobic tak zeby na raz wygenerowac wszystkie losowe pos + vectory
+	srand(time(NULL));
 	int n = Aquarium::FISH_START;
-	auto countIter = thrust::counting_iterator<uint32_t>(0);
+	auto countIter = thrust::counting_iterator<uint32_t>(rand());
 	fish->resize(fish->device, n);
 	auto it = fish->device.iter();
-	//auto res = thrust::async::transform(thrust::device, countIter, countIter + n, it.get_head(), GenerateFishFunctor());
 	auto res = thrust::transform(thrust::device, countIter, countIter + n, it.get_head(), GenerateFishFunctor());
-	//thrust::transform(thrust::device, countIter, countIter + n, fish->device.positions.begin(), GeneratePos());
-	//thrust::transform(thrust::device, countIter, countIter + n, fish->device.directionVecs.begin(), GenerateVector());
-	//thrust::fill(thrust::device, fish->device.alives.begin(), fish->device.alives.end(), true);
-	//thrust::fill(thrust::device, fish->device.currentEnergy.begin(), fish->device.currentEnergy.end(), 25.0f);
 
 	int n2 = Aquarium::ALGAE_START;
-	auto countIter2 = thrust::counting_iterator<uint32_t>(0);
+	auto countIter2 = thrust::counting_iterator<uint32_t>(rand());
 	algae->resize(algae->device, n2);
 	auto it2 = algae->device.iter();
 	auto res2 = thrust::transform(thrust::device, countIter2, countIter2 + n2, it2.get_head(), GenerateAlgaeFunctor());
-	//thrust::transform(thrust::device, countIter, countIter + n2, algae->device.positions.begin(), GeneratePos());
-	//thrust::transform(thrust::device, countIter, countIter + n2, algae->device.directionVecs.begin(), GenerateVector());
-	//thrust::fill(thrust::device, algae->device.alives.begin(), algae->device.alives.end(), true);
-	//thrust::fill(thrust::device, algae->device.currentEnergy.begin(), algae->device.currentEnergy.end(), 25.0f);
-
-	//res.wait();
-	//res2.wait();
 
 	algae->update(algae->host, algae->device);
 	fish->update(fish->host, fish->device);

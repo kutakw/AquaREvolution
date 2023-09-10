@@ -78,10 +78,6 @@ struct GeneratorFish {
 		/*float2**/ energyAlterations = energyAlteration_.data().get();
 		/*float2**/ sightAlterations = sightAlteration_.data().get();
 		/*float**/ velocityAlterations = velocityAlteration_.data().get();
-
-		//energyAlteration = energyAlteration_[mutationID];
-		//sightAlteration = sightAlteration_[mutationID];
-		//velocityAlteration = velocityAlteration_[mutationID];
 	}
 
 	using tup = thrust::tuple<Fish::Entity, uint32_t>;
@@ -117,12 +113,6 @@ void Aquarium::reproduction_algae() {
 	auto it = algae->device.iter();
 	
 	thrust::transform(thrust::device, it.get<0>(), it.get<1>(), dc.begin(), ChildrenCountFunctorAlgae());
-
-	//thrust::host_vector<int32_t> h = dc;
-	//for (int32_t i = 0; i < h.size(); i++) {
-	//	std::cout << i << ": " << h[i] << std::endl;
-	//}
-
 
 	auto begin = thrust::make_zip_iterator(thrust::make_tuple(
 		algae->device.positions.begin(),
@@ -176,12 +166,6 @@ void Aquarium::reproduction_fish()
 	auto it = fish->device.iter();
 
 	thrust::transform(thrust::device, it.get<0>(), it.get<1>(), dc.begin(), ChildrenCountFunctorFish());
-
-	//thrust::host_vector<int32_t> h = dc;
-	//for (int32_t i = 0; i < h.size(); i++) {
-	//	std::cout << i << ": " << h[i] << std::endl;
-	//}
-
 
 	auto begin = thrust::make_zip_iterator(thrust::make_tuple(
 		fish->device.positions.begin(),

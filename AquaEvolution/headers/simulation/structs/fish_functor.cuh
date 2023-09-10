@@ -11,9 +11,10 @@ struct GenerateFishFunctor {
 	__device__
 		Fish::Entity operator()(const uint32_t n) const
 	{
-		thrust::default_random_engine rng;
+		thrust::default_random_engine rng(n);
+		rng.seed(n);
 		thrust::uniform_real_distribution<float> dist(0, 1);
-		rng.discard(n);
+		//rng.discard(n);
 
 		float2 vec = normalize(make_float2(dist(rng), dist(rng)));
 		float2 pos = make_float2(dist(rng) * (Aquarium::WIDTH - 2.0f) + 1.0f, dist(rng) * (Aquarium::HEIGHT - 2.0f) + 1.0f);
@@ -310,7 +311,7 @@ struct FishMoveFunctor {
 		// Check if fish alive
 		if (energy <= 0)
 		{
-			printf("fish[%u] is dead\n", id);
+			printf("fish[%ull] is dead\n", id);
 			alives[id] = false;
 		}
 
