@@ -104,15 +104,15 @@ void Aquarium::generateMutations() {
 void Aquarium::simulateGeneration() {
 	sort_algae();
 
-	auto start = std::chrono::high_resolution_clock().now();
+	//auto start = std::chrono::high_resolution_clock().now();
 	for (int i = 0; i < ITER_PER_GENERATION; i++)
 	{
 		decision();
 		move();
 	}
-	auto end = std::chrono::high_resolution_clock().now();
-	auto time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-	std::cout << time.count() << std::endl;
+	//auto end = std::chrono::high_resolution_clock().now();
+	//auto time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	//std::cout << time.count() << std::endl;
 	//std::cout << static_cast<long long>(100) * 1000 / time.count() << std::endl;
 
 	reproduction_algae();

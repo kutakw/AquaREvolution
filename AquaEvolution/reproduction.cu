@@ -134,7 +134,7 @@ void Aquarium::reproduction_algae() {
 	int32_t minLeft = 0;
 	int32_t childrenInLoop = thrust::transform_reduce(
 		dc.begin(), dc.end(), ChildrenPerIterFunctor(), 0, thrust::plus<int32_t>());
-	std::cout << "reduction: " << childrenLeft << std::endl;
+	//std::cout << "reduction: " << childrenLeft << std::endl;
 
 	Algae* back = &algaeBuffer[1 - currentAlgaeBuffer];
 	if (childrenLeft > back->capacity) {
@@ -160,7 +160,8 @@ void Aquarium::reproduction_algae() {
 		backIter += childrenInLoop;
 		
 		thrust::for_each(dc.begin(), dc.end(), Decrement());
-		childrenLeft = thrust::reduce(dc.begin(), dc.end());
+		//childrenLeft = thrust::reduce(dc.begin(), dc.end());
+		childrenLeft -= childrenInLoop;
 		childrenInLoop = thrust::transform_reduce(
 			dc.begin(), dc.end(), ChildrenPerIterFunctor(), 0, thrust::plus<int32_t>());
 	}
@@ -192,7 +193,7 @@ void Aquarium::reproduction_fish()
 	int32_t minLeft = 0;
 	int32_t childrenInLoop = thrust::transform_reduce(
 		dc.begin(), dc.end(), ChildrenPerIterFunctor(), 0, thrust::plus<int32_t>());
-	std::cout << "fish reduction: " << childrenLeft << std::endl;
+	//std::cout << "fish reduction: " << childrenLeft << std::endl;
 
 	Fish* back = &fishBuffer[1 - currentFishBuffer];
 	if (childrenLeft > back->capacity) {
@@ -222,7 +223,8 @@ void Aquarium::reproduction_fish()
 		backIter += childrenInLoop;
 
 		thrust::for_each(dc.begin(), dc.end(), Decrement());
-		childrenLeft = thrust::reduce(dc.begin(), dc.end());
+		//childrenLeft = thrust::reduce(dc.begin(), dc.end());
+		childrenLeft -= childrenInLoop;
 		childrenInLoop = thrust::transform_reduce(
 			dc.begin(), dc.end(), ChildrenPerIterFunctor(), 0, thrust::plus<int32_t>());
 		i++;
