@@ -1,6 +1,5 @@
 #include "window.cuh"
 #include <glad/glad.h>
-
 #include <glm/glm.hpp>
 
 
@@ -22,7 +21,30 @@ Window::~Window() {
 	window = nullptr;
 }
 
+void dump_data(const Aquarium& aquarium, int iter) {
+	std::string fish_path = "..\\Output\\fish_data";
+	fish_path.append(std::to_string(iter));
+	fish_path.append(".csv");
+	std::ofstream fish_data(fish_path);
+	if (!fish_data.good()) std::cout << "Couldnt dump fish data to file!\n";
+	fish_data << *aquarium.fish;
+	fish_data.close();
+	std::cout << "Dumped to file \"Output\\fish_data.csv\"\n";
+	std::string algae_path = "..\\Output\\algae_data";
+	algae_path.append(std::to_string(iter));
+	algae_path.append(".csv");
+	std::ofstream algae_data(algae_path);
+	if (!algae_data.good()) std::cout << "Couldnt dump fish data to file!\n";
+	algae_data << *aquarium.algae;
+	algae_data.close();
+	std::cout << "Dumped to file \"Output\\algae_data.csv\"\n";
+
+}
+
 void Window::renderLoop(Aquarium& aquarium) {
+	int dump_iter = 0;
+	int dump_freq = 10;
+	int t = 0;
 
 	aquarium.generateLife();
 	aquarium.generateMutations();
@@ -35,6 +57,12 @@ void Window::renderLoop(Aquarium& aquarium) {
 		aquarium.simulateGeneration();
 		aquarium.fish->update(aquarium.fish->host, aquarium.fish->device);
 		aquarium.algae->update(aquarium.algae->host, aquarium.algae->device);
+		if (t == 0) {
+			dump_data(aquarium, dump_iter);
+			dump_iter++;
+		}
+		std::cout << t << std::endl;
+		t = (t + 1) % dump_freq;
 
 		// render scene
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -45,6 +73,7 @@ void Window::renderLoop(Aquarium& aquarium) {
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+
 }
 
 void Window::renderAquarium(Aquarium& aquarium) {
