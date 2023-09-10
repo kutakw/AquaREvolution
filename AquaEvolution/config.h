@@ -39,4 +39,6 @@ static constexpr float FISH_SIGHT_ANGLE = 0.0f;
 static constexpr float FISH_VELOCITY = 2e-3f;
 static constexpr float FISH_ENERGY_DECAY_RATE = 0.1f;
 
+static constexpr int32_t DUMP_FREQ = 10;
+
 #endif // !CONFIG_H

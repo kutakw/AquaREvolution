@@ -3,6 +3,7 @@
 
 #include <simulation/structs/allocator.cuh>
 #include <cstdint>
+
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
 
@@ -41,6 +42,8 @@ struct Algae {
 	}
 
 public:
+	friend std::ostream& operator<<(std::ostream& stream, const Algae& algae);
+
 	template <class T>
 	void reserve(T& t, uint64_t capacity)
 	{
@@ -59,5 +62,4 @@ public:
 		t.currentEnergy.resize(size);
 	}
 };
-
 #endif // !ALGAE_CUH

@@ -60,6 +60,8 @@ struct Fish {
 	}
 
 public:
+	friend std::ostream& operator<<(std::ostream& stream, const Fish& fish);
+
 	template <class T>
 	void reserve(T& t, uint64_t capacity)
 	{

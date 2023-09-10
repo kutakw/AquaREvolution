@@ -5,6 +5,8 @@
 #include <simulation/structs/algae.cuh>
 #include <simulation/structs/mutation.cuh>
 #include <cuda/helper_math.cuh>
+
+
 #include <thrust/device_vector.h>
 #include "config.h"
 

@@ -29,3 +29,23 @@ thrust::tuple<thrust::zip_iterator<Fish::EntityIter>, thrust::zip_iterator<Fish:
 
 	return thrust::make_tuple(begin, end);
 }
+
+std::ostream& operator<<(std::ostream& stream, const Fish& fish) {
+	stream.imbue(std::locale("pl_PL"));
+	stream << "FISHES;\n";
+	stream << "POSITIONS_X;POSITIONS_Y;DIRECTIONS_X;DIRECTIONS_Y;MAX_ENERGY;ENERGY_DECAY;SIGHT_DISTANCE;SIGHT_ANGLE;VELOCITY;\n";
+	for (int i = 0; i < fish.host.positions.size(); i++) {
+		stream 
+			<< fish.host.positions[i].x << ";"
+			<< fish.host.positions[i].y << ";"
+			<< fish.host.directionVecs[i].x << ";"
+			<< fish.host.directionVecs[i].y << ";"
+			<< fish.host.energyParams[i].x << ";"
+			<< fish.host.energyParams[i].y << ";"
+			<< fish.host.sightParams[i].x << ";"
+			<< fish.host.sightParams[i].y << ";"
+			<< fish.host.velocity[i] << ";"
+			<< "\n";
+	}
+	return stream;
+}
