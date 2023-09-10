@@ -29,7 +29,7 @@ void dump_data(const Aquarium& aquarium, int iter) {
 	if (!fish_data.good()) std::cout << "Couldnt dump fish data to file!\n";
 	fish_data << *aquarium.fish;
 	fish_data.close();
-	std::cout << "Dumped to file \"Output\\fish_data.csv\"\n";
+	std::cout << "Dumped to file " << fish_path << std::endl;
 	std::string algae_path = "..\\Output\\algae_data";
 	algae_path.append(std::to_string(iter));
 	algae_path.append(".csv");
@@ -37,13 +37,12 @@ void dump_data(const Aquarium& aquarium, int iter) {
 	if (!algae_data.good()) std::cout << "Couldnt dump fish data to file!\n";
 	algae_data << *aquarium.algae;
 	algae_data.close();
-	std::cout << "Dumped to file \"Output\\algae_data.csv\"\n";
+	std::cout << "Dumped to file " << algae_path << std::endl;
 
 }
 
 void Window::renderLoop(Aquarium& aquarium) {
 	int dump_iter = 0;
-	int dump_freq = 10;
 	int t = 0;
 
 	aquarium.generateLife();
@@ -61,8 +60,7 @@ void Window::renderLoop(Aquarium& aquarium) {
 			dump_data(aquarium, dump_iter);
 			dump_iter++;
 		}
-		std::cout << t << std::endl;
-		t = (t + 1) % dump_freq;
+		t = (t + 1) % DUMP_FREQ;
 
 		// render scene
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

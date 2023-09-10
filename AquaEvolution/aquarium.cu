@@ -27,13 +27,13 @@ void Aquarium::generateLife()
 {
 	// TODO: zrobic tak zeby na raz wygenerowac wszystkie losowe pos + vectory
 	srand(time(NULL));
-	int n = Aquarium::FISH_START;
+	int n = FISH_START;
 	auto countIter = thrust::counting_iterator<uint32_t>(rand());
 	fish->resize(fish->device, n);
 	auto it = fish->device.iter();
 	auto res = thrust::transform(thrust::device, countIter, countIter + n, it.get_head(), GenerateFishFunctor());
 
-	int n2 = Aquarium::ALGAE_START;
+	int n2 = ALGAE_START;
 	auto countIter2 = thrust::counting_iterator<uint32_t>(rand());
 	algae->resize(algae->device, n2);
 	auto it2 = algae->device.iter();
