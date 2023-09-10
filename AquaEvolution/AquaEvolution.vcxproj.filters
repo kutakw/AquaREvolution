@@ -2,6 +2,12 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <CudaCompile Include="kernel.cu" />
+    <CudaCompile Include="aquarium.cu" />
+    <CudaCompile Include="fish.cu" />
+    <CudaCompile Include="algae.cu" />
+    <CudaCompile Include="sort.cu" />
+    <CudaCompile Include="reproduction.cu" />
+    <CudaCompile Include="mutation.cu" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="headers">
@@ -12,20 +18,26 @@
     <ClInclude Include="headers\shader.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\window.h">
+    <ClInclude Include="headers\window.cuh">
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="headers\cuda\helper_math.cuh" />
     <ClInclude Include="headers\cuda\error.cuh" />
     <ClInclude Include="headers\simulation\simulation.cuh" />
-    <ClInclude Include="headers\simulation\structs\aquarium.h" />
-    <ClInclude Include="headers\simulation\structs\algae.h" />
-    <ClInclude Include="headers\simulation\structs\fish.h" />
-    <ClInclude Include="headers\simulation\structs\allocator.h" />
+    <ClInclude Include="headers\simulation\structs\aquarium.cuh" />
+    <ClInclude Include="headers\simulation\structs\algae.cuh" />
+    <ClInclude Include="headers\simulation\structs\fish.cuh" />
+    <ClInclude Include="headers\simulation\structs\allocator.cuh" />
+    <ClInclude Include="headers\simulation\structs\generators.cuh" />
+    <ClInclude Include="headers\simulation\structs\algae_functor.cuh" />
+    <ClInclude Include="headers\simulation\structs\fish_functor.cuh" />
+    <ClInclude Include="headers\simulation\structs\sort.cuh" />
+    <ClInclude Include="headers\simulation\structs\reproduction.cuh" />
+    <ClInclude Include="headers\simulation\structs\mutation.cuh" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c" />
-    <ClCompile Include="window.cpp" />
+    <ClCompile Include="window.cu" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\texture.fs" />

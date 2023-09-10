@@ -1,9 +1,7 @@
-#include "window.h"
+#include "window.cuh"
 #include <glad/glad.h>
 
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 
 Window* Window::instance_ = nullptr;
@@ -25,10 +23,18 @@ Window::~Window() {
 }
 
 void Window::renderLoop(Aquarium& aquarium) {
+
+	aquarium.generateLife();
+	aquarium.generateMutations();
+
 	while (!glfwWindowShouldClose(window))
 	{
 		// input
 		processInput();
+
+		aquarium.simulateGeneration();
+		aquarium.fish->update(aquarium.fish->host, aquarium.fish->device);
+		aquarium.algae->update(aquarium.algae->host, aquarium.algae->device);
 
 		// render scene
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -41,22 +47,6 @@ void Window::renderLoop(Aquarium& aquarium) {
 	}
 }
 
-glm::mat4 getMVP(float2 pos, float2 vec, float size)
-{
-	float scaleX = (2.0f / Aquarium::WIDTH);
-	float scaleY = (2.0f / Aquarium::HEIGHT);
-	glm::vec3 dirVec = glm::normalize(glm::vec3(vec.x, vec.y, 0));
-	float angle = glm::acos(glm::dot(dirVec, glm::vec3(0, 1, 0)));
-	if (vec.x > 0)
-		angle *= -1.0f;
-	glm::mat4 mvpMat = glm::mat4(1.0f);
-	mvpMat = glm::scale(mvpMat, glm::vec3(scaleX, scaleY, 1));
-	mvpMat = mvpMat = glm::translate(mvpMat, glm::vec3(pos.x - Aquarium::WIDTH / 2, pos.y - Aquarium::HEIGHT / 2, 0));
-	mvpMat = glm::rotate(mvpMat, angle, glm::vec3(0.0, 0.0, 1.0));
-	mvpMat = glm::scale(mvpMat, glm::vec3(size, size, 1));
-	return mvpMat;
-}
-
 void Window::renderAquarium(Aquarium& aquarium) {
 	shader.use();
 
@@ -65,32 +55,41 @@ void Window::renderAquarium(Aquarium& aquarium) {
 	shader.setMat4("mvp", glm::mat4(1.0f));
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-	auto& f = aquarium.h_fish;
-	for (uint64_t i = 0; i < *f.count; ++i)
+	auto& a = aquarium.algae->host;
+	for (uint64_t i = 0; i < a.positions.size(); ++i)
 	{
-		if (!f.alives[i]) continue;
+		if (!a.alives[i]) continue;
+		auto& pos = a.positions[i];
 
-		shader.setMat4("mvp", getMVP(
-			f.positions[i],
-			f.directionVecs[i],
-			1.0f)
+		shader.setMat4("mvp", Shader::getMVP(
+			a.positions[i],
+			a.directionVecs[i],
+			.5f)
+		);
+
+		// render algae
+		glBindVertexArray(VAO.y);
+		glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
+	}
+
+	auto& f = aquarium.fish->host;
+	for (uint64_t i = 0; i < f.positions.size(); ++i)
+	{
+		//if (!f.alives[i]) continue;
+		auto& pos = f.positions[i];
+		auto& vec = f.directionVecs[i];
+
+		shader.setMat4("mvp", Shader::getMVP(
+			pos,
+			//float2{ 1.0f, 0.0f },
+			vec,
+			.5f)
 		);
 
 		// render fish
 		glBindVertexArray(VAO.z);
 		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
 	}
-
-	//for each (Algae o in hostAquarium.algae)
-	//{
-	//	if (!o.is_alive) continue;
-
-	//	shader.setMat4("mvp", getMVP(o.position, o.directionVec, o.stats.size));
-
-	//	// render alga
-	//	glBindVertexArray(VAO_alga);
-	//	glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
-	//}
 }
 
 

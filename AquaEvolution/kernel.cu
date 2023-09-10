@@ -1,4 +1,4 @@
-﻿#include <window.h>
+﻿#include <window.cuh>
 
 int main(int argc, char* argv[])
 {
