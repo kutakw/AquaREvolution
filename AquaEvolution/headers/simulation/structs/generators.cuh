@@ -3,7 +3,6 @@
 
 #include <cuda_runtime.h>
 #include <cuda/helper_math.cuh>
-
 #include <thrust/random.h>
 #include "aquarium.cuh"
 
@@ -15,7 +14,7 @@ struct GeneratePos {
 		thrust::uniform_real_distribution<float> dist(0.0f, 1.0f);
 		rng.discard(n);
 
-		float2 res = make_float2(dist(rng) * (Aquarium::WIDTH - 2.0f) + 1.0f, dist(rng) * (Aquarium::HEIGHT - 2.0f) + 1.0f);
+		float2 res = make_float2(dist(rng) * (WIDTH - 2.0f) + 1.0f, dist(rng) * (HEIGHT - 2.0f) + 1.0f);
 		return res;
 	}
 };

@@ -52,7 +52,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 12.0.props" />
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 10.0.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -172,7 +172,6 @@
     <ClInclude Include="headers\cuda\error.cuh" />
     <ClInclude Include="headers\cuda\helper_math.cuh" />
     <ClInclude Include="headers\shader.h" />
-    <ClInclude Include="headers\simulation\simulation.cuh" />
     <ClInclude Include="headers\simulation\structs\algae.cuh" />
     <ClInclude Include="headers\simulation\structs\algae_functor.cuh" />
     <ClInclude Include="headers\simulation\structs\allocator.cuh" />
@@ -181,7 +180,6 @@
     <ClInclude Include="headers\simulation\structs\fish_functor.cuh" />
     <ClInclude Include="headers\simulation\structs\generators.cuh" />
     <ClInclude Include="headers\simulation\structs\mutation.cuh" />
-    <ClInclude Include="headers\simulation\structs\reproduction.cuh" />
     <ClInclude Include="headers\simulation\structs\sort.cuh" />
     <ClInclude Include="headers\window.cuh" />
   </ItemGroup>
@@ -195,6 +193,6 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 12.0.targets" />
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 10.0.targets" />
   </ImportGroup>
 </Project>

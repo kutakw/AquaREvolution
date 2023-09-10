@@ -7,7 +7,7 @@ struct AlgaeKeysFunctor {
 
 	__device__ __host__
 		uint64_t operator()(const float2& f) {
-		return uint64_t(f.x * Aquarium::CELL.x / Aquarium::WIDTH) + uint64_t(f.y * Aquarium::CELL.y / Aquarium::HEIGHT) * Aquarium::CELL.x;
+		return uint64_t(f.x * CELL.x / WIDTH) + uint64_t(f.y * CELL.y / HEIGHT) * CELL.x;
 	}
 };
 

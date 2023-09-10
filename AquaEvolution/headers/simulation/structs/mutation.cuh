@@ -2,12 +2,8 @@
 #define MUTATION_CUH
 
 #include <simulation/structs/allocator.cuh>
-
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
-
-//#include <cuda_runtime.h>
-//#include <device_launch_parameters.h>
 
 struct Mutation {
 
@@ -60,6 +56,5 @@ public:
 		t.velocityAlteration.resize(size);
 	}
 };
-
 
 #endif // MUTATION_CUH
