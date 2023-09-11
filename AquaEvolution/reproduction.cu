@@ -90,7 +90,7 @@ struct GeneratorFish {
 		rng.seed(n.get<1>());
 		rng.discard(n.get<1>());
 		thrust::uniform_real_distribution<float> dist(-1.0f, 1.0f);
-		thrust::uniform_int_distribution<uint64_t> mutation(0, MUTATION_COUNT);
+		thrust::uniform_int_distribution<uint64_t> mutation(0, MUTATION_COUNT - 1);
 		uint64_t mutationId = mutation(rng);
 
 		auto fishEntity = n.get<0>();
@@ -110,6 +110,7 @@ struct GeneratorFish {
 
 		//printf("fish[%llu]: pos: (%f, %f),\n\t vec: (%f, %f),\n\t alive: %d,\n\t currentEnergy: %f,\n\t sightParams: (%f, %f),\n\t energyParams: (%f, %f),\n\t velocity: %f\n",
 		//	n.get<1>(), pos.x, pos.y, vec.x, vec.y, alive, currentEnergy, sightParams.x, sightParams.y, energyParams.x, energyParams.y, velocity);
+		//return thrust::make_tuple(pos, vec, alive, 30.0f, FishDecisionEnum::NONE, -1, float2{ 60.0f, 0.001f }, float2{ 30.0f, 0.0f }, 5.0f);
 		return thrust::make_tuple(pos, vec, alive, currentEnergy, next, eatenAlgaeId,energyParams,sightParams,velocity);
 	}
 };

@@ -1,6 +1,7 @@
 #include "window.cuh"
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <chrono>
 
 
 Window* Window::instance_ = nullptr;
@@ -44,17 +45,31 @@ void dump_data(const Aquarium& aquarium, int iter) {
 void Window::renderLoop(Aquarium& aquarium) {
 	int dump_iter = 0;
 	int t = 0;
+	uint64_t t2 = 0;
 
 	aquarium.generateLife();
 	aquarium.generateMutations();
+
+	dump_data(aquarium, dump_iter);
+	dump_iter++;
 
 	while (!glfwWindowShouldClose(window))
 	{
 		// input
 		processInput();
 
-		for(uint32_t i = 0; i < DISPLAY_FREQ; i++)
+		for (uint32_t i = 0; i < DISPLAY_FREQ; i++)
+		{
+			auto start = std::chrono::high_resolution_clock::now();
 			aquarium.simulateGeneration();
+			std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() << '\n';
+			if (t2 == 1000) {
+				std::cout << "1000";
+				std::cin.get();
+				std::cin.get();
+			}
+			t2 += 1;
+		}
 
 		aquarium.fish->update(aquarium.fish->host, aquarium.fish->device);
 		aquarium.algae->update(aquarium.algae->host, aquarium.algae->device);
@@ -81,12 +96,21 @@ void Window::windowless_simulation(Aquarium& aquarium)
 {
 	int dump_iter = 0;
 	int t = 0;
+	uint64_t t2 = 0;
 
 	aquarium.generateLife();
 	aquarium.generateMutations();
 
 	while (true) {
+		auto start = std::chrono::high_resolution_clock::now();
 		aquarium.simulateGeneration();
+		std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() << '\n';
+
+		if (t2 == 1000) {
+			std::cout << "1000";
+			std::cin.get();
+			std::cin.get();
+		}
 
 		if (t == DUMP_FREQ) {
 			aquarium.fish->update(aquarium.fish->host, aquarium.fish->device);
@@ -96,6 +120,7 @@ void Window::windowless_simulation(Aquarium& aquarium)
 			t = 0;
 		}
 		t += 1;
+		t2 += 1;
 	}
 }
 
