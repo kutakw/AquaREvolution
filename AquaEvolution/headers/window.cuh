@@ -33,6 +33,7 @@ public:
 	}
 
 	void renderLoop(Aquarium& aquarium);
+	static void windowless_simulation(Aquarium& aquarium);
 private:
 	Window();
 	~Window();

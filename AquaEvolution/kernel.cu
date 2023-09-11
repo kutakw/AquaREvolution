@@ -1,13 +1,22 @@
 ﻿#include <window.cuh>
 #include <time.h>
+#include "config.h"
 
 int main(int argc, char* argv[])
 {
 	srand(time(NULL));
-	Window& instance = Window::instance();
 	Aquarium aquarium;
-	instance.renderLoop(aquarium);
-	instance.free();
+	if (DISPLAY) 
+	{
+		Window& instance = Window::instance();
+		instance.renderLoop(aquarium);
+		instance.free();
+	} 
+	else 
+	{
+		Window::windowless_simulation(aquarium);
+	}
+	
 
 	return 0;
 }

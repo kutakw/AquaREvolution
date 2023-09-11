@@ -4,6 +4,13 @@
 #include <cuda/helper_math.cuh>
 #include <thrust/device_vector.h>
 
+// Graphical display of current simulation state
+constexpr bool DISPLAY = true;
+// Number of generations between displays
+constexpr uint32_t DISPLAY_FREQ = 1;
+// Data file dumping frequency (one dump per DUMP_FREQ number of generations)
+static constexpr int32_t DUMP_FREQ = 1;
+
 // Environment dimensions
 constexpr float WIDTH = 100.f;
 constexpr float HEIGHT = 100.f;
@@ -38,6 +45,8 @@ constexpr float FISH_SIGHT_DIST = 10.0f;
 constexpr float FISH_SIGHT_ANGLE = 0.0f;
 constexpr float FISH_VELOCITY = 2e-3f;
 constexpr float FISH_ENERGY_DECAY_RATE = 0.1f;
+constexpr float FISH_MINIMUM_ENERGY_CAPACITY = 15.0f;
+constexpr float FISH_MINIMUM_ENERGY_DECAY = 0.001f;
 
 // Mutations
 constexpr uint64_t MUTATION_COUNT = 6;
@@ -70,8 +79,5 @@ inline void initMutationsFromConfig(Mutation& mutation) {
 	mutation.host.sightAlteration[5] = make_float2(0.995f, 0.001f); // (dist -> multiplier, angle -> addition)
 	mutation.host.velocityAlteration[5] = 1.0f;
 }
-
-// Data file dumping frequency (one dump per DUMP_FREQ number of generations)
-static constexpr int32_t DUMP_FREQ = 10;
 
 #endif // !CONFIG_H

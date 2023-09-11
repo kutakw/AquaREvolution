@@ -53,14 +53,17 @@ void Window::renderLoop(Aquarium& aquarium) {
 		// input
 		processInput();
 
-		aquarium.simulateGeneration();
+		for(uint32_t i = 0; i < DISPLAY_FREQ; i++)
+			aquarium.simulateGeneration();
+
 		aquarium.fish->update(aquarium.fish->host, aquarium.fish->device);
 		aquarium.algae->update(aquarium.algae->host, aquarium.algae->device);
-		if (t == 0) {
+		if (t == DUMP_FREQ) {
 			dump_data(aquarium, dump_iter);
 			dump_iter++;
+			t = 0;
 		}
-		t = (t + 1) % DUMP_FREQ;
+		t += 1;
 
 		// render scene
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -72,6 +75,28 @@ void Window::renderLoop(Aquarium& aquarium) {
 		glfwPollEvents();
 	}
 
+}
+
+void Window::windowless_simulation(Aquarium& aquarium)
+{
+	int dump_iter = 0;
+	int t = 0;
+
+	aquarium.generateLife();
+	aquarium.generateMutations();
+
+	while (true) {
+		aquarium.simulateGeneration();
+
+		if (t == DUMP_FREQ) {
+			aquarium.fish->update(aquarium.fish->host, aquarium.fish->device);
+			aquarium.algae->update(aquarium.algae->host, aquarium.algae->device);
+			dump_data(aquarium, dump_iter);
+			dump_iter++;
+			t = 0;
+		}
+		t += 1;
+	}
 }
 
 void Window::renderAquarium(Aquarium& aquarium) {

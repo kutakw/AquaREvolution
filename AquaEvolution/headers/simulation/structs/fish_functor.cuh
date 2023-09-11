@@ -13,7 +13,7 @@ struct GenerateFishFunctor {
 	{
 		thrust::default_random_engine rng(n);
 		rng.seed(n);
-		thrust::uniform_real_distribution<float> dist(0, 1);
+		thrust::uniform_real_distribution<float> dist(0.0f, 1.0f);
 		//rng.discard(n);
 
 		float2 vec = normalize(make_float2(dist(rng), dist(rng)));
@@ -22,6 +22,10 @@ struct GenerateFishFunctor {
 		float2 sightParams = make_float2(FISH_SIGHT_DIST, FISH_SIGHT_ANGLE);
 		float energy = FISH_INITAL_ENERGY;
 		float velocity = FISH_VELOCITY;
+
+		//printf("BEGINNING\n");
+		//printf("fish[START]: pos: (%f, %f), vec: (%f, %f), alive: %d, currentEnergy: %f, eatenAlgaeId: %llu, sightParams: (%f, %f), energyParams: (%f, %f), velocity: %f\n", 
+		//	pos.x, pos.y, vec.x, vec.y, true, energy, -1, sightParams.x, sightParams.y, energyParams.x, energyParams.y, velocity);
 		return thrust::make_tuple(
 			pos, 
 			vec, 
