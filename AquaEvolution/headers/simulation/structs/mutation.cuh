@@ -7,8 +7,6 @@
 
 struct Mutation {
 
-	static constexpr int MUTATION_COUNT = 6;
-
 	using Entity = entity<float2, float2, float>;
 	using EntityIter = entityIter<float2, float2, float>;
 

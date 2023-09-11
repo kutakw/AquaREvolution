@@ -86,7 +86,7 @@ struct GeneratorFish {
 	{
 		thrust::default_random_engine rng;
 		thrust::uniform_real_distribution<float> dist(-1, 1);
-		thrust::uniform_real_distribution<uint64_t> mutation(0, Mutation::MUTATION_COUNT);
+		thrust::uniform_real_distribution<uint64_t> mutation(0, MUTATION_COUNT);
 		uint64_t mutationId = mutation(rng);
 		rng.discard(n.get<1>());
 
@@ -195,7 +195,7 @@ void Aquarium::reproduction_fish()
 			childrenInLoop = childrenLeft - minLeft;
 
 		auto it = fish->device.iter();
-		uint64_t mutationId = i % fish->capacity;
+		uint64_t mutationId = rand() % MUTATION_COUNT;
 		thrust::transform(
 			thrust::device,
 			thrust::make_zip_iterator(thrust::make_tuple(it.get_head(), countIter)),
@@ -207,7 +207,6 @@ void Aquarium::reproduction_fish()
 		backIter += childrenInLoop;
 
 		thrust::for_each(dc.begin(), dc.end(), Decrement());
-		//childrenLeft = thrust::reduce(dc.begin(), dc.end());
 		childrenLeft -= childrenInLoop;
 		childrenInLoop = thrust::transform_reduce(
 			dc.begin(), dc.end(), ChildrenPerIterFunctor(), 0, thrust::plus<int32_t>());

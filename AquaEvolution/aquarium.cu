@@ -1,5 +1,4 @@
 #include <simulation/structs/aquarium.cuh>
-#include <chrono>
 #include <simulation/structs/generators.cuh>
 #include <simulation/structs/fish_functor.cuh>
 #include <simulation/structs/algae_functor.cuh>
@@ -20,13 +19,11 @@ Aquarium::Aquarium() :
 	algae(algaeBuffer),
 	algaeBucketIds(CELL.x * CELL.y),
 	algaeKeys(ALGAE_MAX_COUNT),
-	mutation(Mutation::MUTATION_COUNT)
+	mutation(MUTATION_COUNT)
 {}
 
 void Aquarium::generateLife()
 {
-	// TODO: zrobic tak zeby na raz wygenerowac wszystkie losowe pos + vectory
-	srand(time(NULL));
 	int n = FISH_START;
 	auto countIter = thrust::counting_iterator<uint32_t>(rand());
 	fish->resize(fish->device, n);
@@ -44,42 +41,8 @@ void Aquarium::generateLife()
 }
 
 void Aquarium::generateMutations() {
-	int n = 6;
-	mutation.resize(mutation.host, n);
-
-	//for (int i = 0; i < n; i++)
-	//{
-	//	mutation.host.energyAlteration[i] = make_float2(1.0f, 1.0f);
-	//	mutation.host.sightAlteration[i] = make_float2(1.0f, 0.0f);
-	//	mutation.host.velocityAlteration[i] = 1.0f;
-	//}
-
-	// M0 -> faster but less energy-capacity
-	mutation.host.energyAlteration[0] = make_float2(0.995f, 1.0f);
-	mutation.host.sightAlteration[0] = make_float2(1.0f, 0.f); // (dist -> multiplier, angle -> addition)
-	mutation.host.velocityAlteration[0] = 1.005f;
-	// M1 -> more enrgy capacity but slower
-	mutation.host.energyAlteration[1] = make_float2(1.005f, 1.0f);
-	mutation.host.sightAlteration[1] = make_float2(1.0f, 0.0f); // (dist -> multiplier, angle -> addition)
-	mutation.host.velocityAlteration[1] = 0.995f;
-	// M2 -> faster but more energy usage
-	mutation.host.energyAlteration[2] = make_float2(1.0f, 1.005f);
-	mutation.host.sightAlteration[2] = make_float2(1.0f, 0.0f); // (dist -> multiplier, angle -> addition)
-	mutation.host.velocityAlteration[2] = 1.005f;
-	// M3 -> slower but less energy usage
-	mutation.host.energyAlteration[3] = make_float2(1.0f, 0.995f);
-	mutation.host.sightAlteration[3] = make_float2(1.0f, 0.0f); // (dist -> multiplier, angle -> addition)
-	mutation.host.velocityAlteration[3] = 0.995f;
-	// M4 -> further sight distance but less angle
-	mutation.host.energyAlteration[4] = make_float2(1.0f, 1.0f);
-	mutation.host.sightAlteration[4] = make_float2(1.005f, -0.001f); // (dist -> multiplier, angle -> addition)
-	mutation.host.velocityAlteration[4] = 1.0f;
-	// M5 -> closer sight distance but bigger anlge
-	mutation.host.energyAlteration[5] = make_float2(1.0f, 1.0f);
-	mutation.host.sightAlteration[5] = make_float2(0.995f, 0.001f); // (dist -> multiplier, angle -> addition)
-	mutation.host.velocityAlteration[5] = 1.0f;
-
-	mutation.resize(mutation.device, n);
+	initMutationsFromConfig(mutation);
+	mutation.resize(mutation.device, MUTATION_COUNT);
 	mutation.update(mutation.device, mutation.host);
 }
 
@@ -100,7 +63,6 @@ void Aquarium::simulateGeneration() {
 	reproduction_algae();
 	reproduction_fish();
 }
-
 
 void Aquarium::decision()
 {
